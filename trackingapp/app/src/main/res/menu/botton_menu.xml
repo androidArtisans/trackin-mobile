@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/tracks"
+        android:icon="@drawable/marks"
+        android:title="Track"
+        />
+    <item
+        android:id="@+id/notifications"
+        android:icon="@drawable/notif"
+        android:title="Notifications"
+        />
+    <item
+        android:id="@+id/gps"
+        android:icon="@drawable/send"
+        android:title="GPS"
+        />
+<!--    <item-->
+<!--        android:id="@+id/history"-->
+<!--        android:icon="@drawable/history"-->
+<!--        android:title="History" />-->
+<!--    <item-->
+<!--        android:id="@+id/info"-->
+<!--        android:icon="@drawable/info"-->
+<!--        android:title="Info" />-->
+</menu>

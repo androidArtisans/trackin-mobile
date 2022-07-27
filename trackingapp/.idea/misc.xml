@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/DIP/Practices/trackingapp/app/src/main/res/layout/activity_main.xml" value="0.19010416666666666" />
+        <entry key="..\:/DIP/Practices/trackingapp/app/src/main/res/layout/fragment_history.xml" value="0.15648148148148147" />
+        <entry key="..\:/DIP/Practices/trackingapp/app/src/main/res/layout/fragment_info.xml" value="0.15648148148148147" />
+        <entry key="..\:/DIP/Practices/trackingapp/app/src/main/res/layout/fragment_maps.xml" value="0.15648148148148147" />
+        <entry key="..\:/DIP/Practices/trackingapp/app/src/main/res/layout/fragment_notification.xml" value="0.15648148148148147" />
+        <entry key="..\:/DIP/Practices/trackingapp/app/src/main/res/layout/fragment_track.xml" value="0.1" />
+        <entry key="..\:/DIP/Practices/trackingapp/app/src/main/res/layout/notification_item.xml" value="0.33" />
+        <entry key="..\:/DIP/Practices/trackingapp/app/src/main/res/menu/botton_menu.xml" value="0.67" />
+        <entry key="..\:/DIP/track/trackingapp/app/src/main/res/drawable/bottom_nav_item.xml" value="0.1" />
+        <entry key="..\:/DIP/track/trackingapp/app/src/main/res/layout/activity_main.xml" value="0.33" />
+        <entry key="..\:/DIP/track/trackingapp/app/src/main/res/layout/activity_splash.xml" value="0.3211050724637681" />
+        <entry key="..\:/DIP/track/trackingapp/app/src/main/res/layout/bottom_sheet_dialog.xml" value="0.22" />
+        <entry key="..\:/DIP/track/trackingapp/app/src/main/res/layout/fragment_gps.xml" value="0.75" />
+        <entry key="..\:/DIP/track/trackingapp/app/src/main/res/layout/fragment_track.xml" value="0.18009118541033434" />
+        <entry key="..\:/DIP/track/trackingapp/app/src/main/res/layout/splash_screen.xml" value="0.3703125" />
+        <entry key="..\:/DIP/track/trackingapp/app/src/main/res/menu/botton_menu.xml" value="0.1" />
+        <entry key="..\:/Modulo04/Final/tracker/trackingapp/app/src/main/res/drawable/bottom_nav_item.xml" value="0.269" />
+        <entry key="..\:/Modulo04/Final/tracker/trackingapp/app/src/main/res/drawable/main_color.xml" value="0.174" />
+        <entry key="..\:/Modulo04/Final/tracker/trackingapp/app/src/main/res/layout/activity_main.xml" value="0.2798887859128823" />
+        <entry key="..\:/Modulo04/Final/tracker/trackingapp/app/src/main/res/layout/activity_splash.xml" value="0.175" />
+        <entry key="..\:/Modulo04/Final/tracker/trackingapp/app/src/main/res/layout/bottom_sheet_dialog.xml" value="0.30570652173913043" />
+        <entry key="..\:/Modulo04/Final/tracker/trackingapp/app/src/main/res/layout/fragment_gps.xml" value="0.30570652173913043" />
+        <entry key="..\:/Modulo04/Final/tracker/trackingapp/app/src/main/res/layout/fragment_history.xml" value="0.175" />
+        <entry key="..\:/Modulo04/Final/tracker/trackingapp/app/src/main/res/layout/fragment_notification.xml" value="0.175" />
+        <entry key="..\:/Modulo04/Final/tracker/trackingapp/app/src/main/res/layout/fragment_track.xml" value="0.30570652173913043" />
+        <entry key="..\:/Modulo04/Final/tracker/trackingapp/app/src/main/res/layout/notification_item.xml" value="0.175" />
+        <entry key="..\:/Modulo04/Final/tracker/trackingapp/app/src/main/res/menu/botton_menu.xml" value="0.5" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.1" />
+      </ProjectState>
+    </option>
+  </component>
+</project>
