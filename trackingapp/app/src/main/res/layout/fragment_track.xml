@@ -4,26 +4,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="6sp"
     tools:context=".TrackFragment">
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnSheetBottom"
+    <LinearLayout
+        android:id="@+id/llContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="10dp"
-        android:src="@drawable/ic_form"
-        android:backgroundTint="@color/app_secondary"
-        app:tint="@color/app_white"
-        android:textAllCaps="false" />
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@color/app_primary"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        >
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TRACK-IN"
+            style="@style/HeaderText"
+            android:layout_weight="1"
+            />
+        <ImageView
+            android:id="@+id/btnSheetBottom"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:padding="10dp"
+            android:src="@drawable/ic_form"
+            app:tint="@color/app_white"
+            android:background="@drawable/bg_btn_header"
+            android:clickable="true"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
 
     <org.osmdroid.views.MapView
         android:id="@+id/osmView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/llContainer"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

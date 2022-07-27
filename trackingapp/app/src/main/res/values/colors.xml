@@ -14,4 +14,5 @@
     <color name="app_pink_normal">#dc5802</color>
     <color name="app_black">#111111</color>
     <color name="app_white">#e6e6e6</color>
+    <color name="app_gray">#9F9DB2</color>
 </resources>

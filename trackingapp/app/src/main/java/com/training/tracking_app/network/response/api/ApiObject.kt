@@ -4,7 +4,7 @@ import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-const val URL = "http://10.240.2.110:3000/"
+const val URL = "https://laravel-zwhc.frb.io/api/"
 object ApiObject {
 
     fun getRetro() : ApiResource{

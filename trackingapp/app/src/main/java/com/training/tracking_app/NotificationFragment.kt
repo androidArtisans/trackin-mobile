@@ -27,9 +27,9 @@ class NotificationFragment : Fragment() {
 
 
     var listNotificacions = listOf(
-        NotificacionDto("Notificacion 1", "DESCRIPCION", "#ff0000", "hoy"),
-        NotificacionDto("Notificacion 2", "DESCRIPCION", "#00ff00", "hoy"),
-        NotificacionDto("Notificacion 3", "DESCRIPCION", "#0000ff", "hoy")
+        NotificacionDto("- CHECKPOINT - ", "Primer checkpoint ", "#ff0000", "12:30"),
+        NotificacionDto("- PARADA 1 - ", "Carga de combustible", "#00ff00", "11:30"),
+        NotificacionDto("- INICIO DE RUTA - ", "El viaje 123 acaba de iniciar su ruta a las 11:00am del 27/07/2022", "#0000ff", "11:00")
     )
     private lateinit var adapter: NotificacionsAdapter
 
@@ -39,34 +39,33 @@ class NotificationFragment : Fragment() {
     ): View? {
         _binding = FragmentNotificationBinding.inflate(inflater, container,false)
         initRecyclerView(binding!!.root)
-        binding!!.btnMore.setOnClickListener{
-            val bundle = arguments
-            val message = bundle!!.getString("code")
-            Toast.makeText(context, "MAS NOTIF $message" ,Toast.LENGTH_SHORT).show()
-
-            getNotification()
-        }
+//        binding!!.btnMore.setOnClickListener{
+//            val bundle = arguments
+//            val message = bundle!!.getString("code")
+//            Toast.makeText(context, "MAS NOTIF $message" ,Toast.LENGTH_SHORT).show()
+//            getNotification()
+//        }
         return binding!!.root
     }
 
     private fun getNotification() {
         Toast.makeText(context, "MAS NOTIF $code" ,Toast.LENGTH_SHORT).show()
         CoroutineScope(Dispatchers.IO).launch {
-            val _res: Response<TravelResponse>
+            val _res: Response<*>
             _res = ApiObject.getRetro().findTravel("123")
             val _response = _res.body()!!
 
             activity?.runOnUiThread{
                 if(_res.isSuccessful){
-                    if(_response.status == "200"){
-                        if(_response.travel.route != null){
-
-                        } else {
-
-                        }
-                    } else {
-
-                    }
+//                    if(_response.status == "200"){
+//                        if(_response.travel.point != null){
+//
+//                        } else {
+//
+//                        }
+//                    } else {
+//
+//                    }
                 }
             }
         }

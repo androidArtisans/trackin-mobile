@@ -6,8 +6,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/app_white"
     tools:context=".GpsFragment">
-
-
+    <LinearLayout
+        android:id="@+id/llContainer"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:background="@color/app_primary"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        >
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SEND UBICATION"
+            style="@style/HeaderText"
+            />
+    </LinearLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fbSend"
         android:layout_width="150dp"

@@ -14,17 +14,17 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.training.tracking_app.Dto.PointTrack
-
+import com.training.tracking_app.Dto.PointDto
+import com.training.tracking_app.DtoLaravel.FindByCode
+import com.training.tracking_app.DtoLaravel.Trackin
+import com.training.tracking_app.helper.HelperApi
 import com.training.tracking_app.network.response.TravelResponse
-
 import com.training.tracking_app.network.response.api.ApiObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapController
@@ -47,11 +47,11 @@ class TrackFragment : Fragment() {
     private lateinit var osmView : MapView
     private lateinit var mapController : MapController
 
-    val _listPoint = arrayListOf<PointTrack>(
-        PointTrack(-17.3978832,-66.1530828, ""),
-        PointTrack(-17.397788, -66.151195,""),
-        PointTrack(-17.4150,-66.1663,""),
-        PointTrack(-17.4155,-66.1668,"")
+    val _listPoint = arrayListOf<PointDto>(
+        PointDto("-17.3978832","-66.1530828", "",""),
+        PointDto("-17.397788", "-66.151195","",""),
+        PointDto("-17.4150","-66.1663","",""),
+        PointDto("-17.4155","-66.1668","","")
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,7 +70,7 @@ class TrackFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _view = inflater.inflate(R.layout.fragment_track, container, false)
-        var btnSheet = _view.findViewById<FloatingActionButton>(R.id.btnSheetBottom)
+        var btnSheet = _view.findViewById<ImageView>(R.id.btnSheetBottom)
         btnSheet.setOnClickListener {
             val dialog = BottomSheetDialog(_view.context)
             val menu = inflater.inflate(R.layout.bottom_sheet_dialog, null)
@@ -98,31 +98,30 @@ class TrackFragment : Fragment() {
     }
 
     private fun findTravel(code : String, dialog : BottomSheetDialog) {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val _res: Response<TravelResponse>
-//            _res = ApiObject.getRetro().findTravel(code)
-//            val _response = _res.body()!!
-//            activity?.runOnUiThread{
-//                if(_res.isSuccessful){
-//                    if(_response.status == "200"){
-//                        Log.d(code, _response.travel.toString())
-//                        if(_response.travel.route != null)
-//                            drawRoute(_response.travel.route)
-//                        else
-//                            drawRoute(_listPoint)
-//                        dialog.dismiss()
-//                    } else {
-//                        Toast.makeText(_view.context, _response.error.toString(), Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-//            }
-//        }
+        CoroutineScope(Dispatchers.IO).launch {
+            val _res: Response<*>
+            _res = ApiObject.getRetro().findTravel(code)
+            val _response : FindByCode? = HelperApi.findByCode(_res.body()!! as List<*>)
+            activity?.runOnUiThread{
+                if(_res.isSuccessful){
+                    if(_response != null){
+                        if(_response.points != null)
+                            drawRoute(_response.points)
+                        else
+                            Toast.makeText(_view.context, "Su viaje ya se encuentra en progreso, pero no se tiene ningun track", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    } else {
+                        Toast.makeText(_view.context, "Su viaje aun no se encuentra disponible", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
 
     private fun init(){
         mapConfig()
         drawCompass()
-        drawRoute(_listPoint)
+        //drawRoute(_listPoint)
     }
 
     private fun mapConfig(){
@@ -140,13 +139,14 @@ class TrackFragment : Fragment() {
         osmView.overlays.add(compass)
     }
 
-    private fun drawRoute( listPoint : ArrayList<PointTrack>?) {
+    private fun drawRoute( listPoint : ArrayList<Trackin>?) {
         val list = ArrayList<GeoPoint>()
-        for ( p : PointTrack in listPoint!!){
-            val _actual = GeoPoint(p.latitude, p.longitud)
-            list.add(GeoPoint(p.latitude, p.longitud))
+        for ( p : Trackin in listPoint!!){
+            val _actual = GeoPoint(p.latitude.toDouble(), p.longitude.toDouble())
+            list.add(_actual)
             drawMark(_actual)
         }
+        Log.d("TAG", list.toString())
         val line = Polyline()
         line.points = list
         line.color = Color.parseColor("#FB2E50")
