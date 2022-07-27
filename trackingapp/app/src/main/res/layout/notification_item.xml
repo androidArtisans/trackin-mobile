@@ -21,8 +21,9 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_margin="10dp"
-            android:src="@drawable/history"
-            app:tint="@color/app_secondary"
+            android:src="@drawable/marks"
+            android:background="@color/app_gray"
+            app:tint="@color/app_white"
             />
         <LinearLayout
             android:layout_width="match_parent"

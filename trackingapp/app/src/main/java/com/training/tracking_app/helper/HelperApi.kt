@@ -11,7 +11,6 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
-
 object HelperApi {
     @RequiresApi(Build.VERSION_CODES.O)
     fun findByCode(obj : List<*>) : FindByCode?{

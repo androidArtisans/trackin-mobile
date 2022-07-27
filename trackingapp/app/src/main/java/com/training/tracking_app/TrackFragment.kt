@@ -2,6 +2,7 @@ package com.training.tracking_app
 
 import android.content.Context
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.preference.PreferenceManager
@@ -14,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.training.tracking_app.Dto.PointDto
 import com.training.tracking_app.DtoLaravel.FindByCode
@@ -65,6 +67,7 @@ class TrackFragment : Fragment() {
 
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -97,6 +100,7 @@ class TrackFragment : Fragment() {
         return _view
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun findTravel(code : String, dialog : BottomSheetDialog) {
         CoroutineScope(Dispatchers.IO).launch {
             val _res: Response<*>
