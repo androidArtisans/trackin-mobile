@@ -15,13 +15,15 @@ object HelperApi {
     @RequiresApi(Build.VERSION_CODES.O)
     fun findByCode(obj : List<*>) : FindByCode?{
         var _res : FindByCode? = null
-        val _trackin : ArrayList<Trackin> = ArrayList<Trackin>()
-        val _aux = obj.get(0) as LinkedTreeMap<*, *>
-        _res = FindByCode(200,_aux.get("id").toString(), _aux.get("code").toString(), null)
-        if(_aux.get("trakins") != null){
-            val _list = _aux.get("trakins") as List<LinkedTreeMap<*, *>>
-            for(p in _list){
-                _trackin.add(Trackin(
+        Log.d("AAA", obj.toString())
+        if(obj.isNotEmpty()){
+            val _trackin : ArrayList<Trackin> = ArrayList<Trackin>()
+            val _aux = obj.get(0) as LinkedTreeMap<*, *>
+            _res = FindByCode(200,_aux.get("id").toString(), _aux.get("code").toString(), null)
+            if(_aux.get("trakins") != null){
+                val _list = _aux.get("trakins") as List<LinkedTreeMap<*, *>>
+                for(p in _list){
+                    _trackin.add(Trackin(
                         p.get("latitude").toString(),
                         p.get("longitude").toString(),
                         p.get("message").toString(),
@@ -29,11 +31,11 @@ object HelperApi {
                         getDateMySQL(),
                         "Automatic"
                     )
-                )
+                    )
+                }
+                _res.points = _trackin
             }
-            _res.points = _trackin
         }
-        Log.d("TAG", _res.toString())
         return _res
     }
 

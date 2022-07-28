@@ -80,9 +80,9 @@ class GpsFragment : Fragment() {
             Log.d(TAG, _res.toString())
             activity?.runOnUiThread{
                 if(_res.isSuccessful){
-                    Toast(context).showCustomToast("Subscripcion correcta", requireActivity())
+                    Toast(context).showCustomToast(getString(R.string.subs_ok), requireActivity())
                 }else{
-                    Toast(context).showCustomToast("Algo salio mal consulta con el administrador.", requireActivity())
+                    Toast(context).showCustomToast(getString(R.string.bad_sequence), requireActivity())
                 }
             }
         }

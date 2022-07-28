@@ -1,18 +1,14 @@
 package com.training.tracking_app
 
-import android.content.Context
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.training.tracking_app.DtoLaravel.FindByCode
@@ -29,6 +25,7 @@ import retrofit2.Response
 
 
 class NotificationFragment : Fragment() {
+    var TAG = "NOTIFICATIONS"
     var code : String ? = null
     var _binding : FragmentNotificationBinding? = null
     private val binding get() = _binding
@@ -57,10 +54,10 @@ class NotificationFragment : Fragment() {
     private fun findTravel(code : String) {
         CoroutineScope(Dispatchers.IO).launch {
             val _res: Response<*>
-            _res = ApiObject.getRetro().findTravel("012012")
-            val _response : FindByCode? = HelperApi.findByCode(_res.body()!! as List<*>)
+            _res = ApiObject.getRetro().findTravel(code)
             activity?.runOnUiThread{
                 if(_res.isSuccessful){
+                    val _response : FindByCode? = HelperApi.findByCode(_res.body()!! as List<*>)
                     if(_response != null){
                         if(_response.points != null)
                             fillNotification(_response.points!!)
@@ -69,6 +66,8 @@ class NotificationFragment : Fragment() {
                     } else {
                         Toast(context).showCustomToast(getString(R.string.code_no_available), requireActivity())
                     }
+                }else {
+                    Toast(context).showCustomToast(getString(R.string.code_no_available), requireActivity())
                 }
             }
         }
