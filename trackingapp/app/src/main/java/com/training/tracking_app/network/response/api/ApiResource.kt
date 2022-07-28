@@ -1,6 +1,7 @@
 package com.training.tracking_app.network.response.api
 
 import com.training.tracking_app.Dto.PointDto
+import com.training.tracking_app.DtoLaravel.Device
 import com.training.tracking_app.DtoLaravel.Trackin
 import com.training.tracking_app.network.response.TravelResponse
 import retrofit2.Response
@@ -12,6 +13,9 @@ import retrofit2.http.Path
 interface ApiResource {
     @POST("trakin")
     suspend fun addTrackin(@Body point: Trackin):Response<*>
+
+    @POST("device")
+    suspend fun subscribe(@Body subscribe: Device):Response<*>
 
     @GET("findByCode/{code}")
     suspend fun findTravel(@Path("code") code : String): Response<*>

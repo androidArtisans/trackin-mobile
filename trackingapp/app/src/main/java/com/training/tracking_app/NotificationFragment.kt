@@ -1,30 +1,32 @@
 package com.training.tracking_app
 
+import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.training.tracking_app.Dto.NotificacionDto
 import com.training.tracking_app.DtoLaravel.FindByCode
 import com.training.tracking_app.DtoLaravel.Trackin
-import com.training.tracking_app.databinding.FragmentGpsBinding
 import com.training.tracking_app.databinding.FragmentNotificationBinding
 import com.training.tracking_app.helper.HelperApi
-import com.training.tracking_app.network.response.TravelResponse
+import com.training.tracking_app.helper.showCustomToast
 import com.training.tracking_app.network.response.api.ApiObject
 import com.training.tracking_app.ui.adapter.NotificacionsAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
+
 
 class NotificationFragment : Fragment() {
     var code : String ? = null
@@ -45,7 +47,7 @@ class NotificationFragment : Fragment() {
             if(!binding!!.etCode.text.toString().equals("")){
                 findTravel(binding!!.etCode.text.toString())
             } else {
-                Toast.makeText(context, "Su viaje ya se encuentra en progreso, pero no se tiene ningun track", Toast.LENGTH_SHORT).show()
+                Toast(context).showCustomToast(getString(R.string.no_points), requireActivity())
             }
         }
         return binding!!.root
@@ -63,9 +65,9 @@ class NotificationFragment : Fragment() {
                         if(_response.points != null)
                             fillNotification(_response.points!!)
                         else
-                            Toast.makeText(context, "Su viaje ya se encuentra en progreso, pero no se tiene ningun track", Toast.LENGTH_SHORT).show()
+                            Toast(context).showCustomToast(getString(R.string.no_points), requireActivity())
                     } else {
-                        Toast.makeText(context, "Su viaje aun no se encuentra disponible", Toast.LENGTH_SHORT).show()
+                        Toast(context).showCustomToast(getString(R.string.code_no_available), requireActivity())
                     }
                 }
             }

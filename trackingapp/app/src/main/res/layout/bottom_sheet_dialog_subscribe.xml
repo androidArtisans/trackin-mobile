@@ -17,13 +17,12 @@
             android:background="@drawable/bg_header"
             android:orientation="horizontal"
             >
-
             <TextView
                 style="@style/HeaderText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="CHECK YOUR TRACK" />
+                android:text="SUBSCRIBE" />
             <ImageView
                 android:id="@+id/ivClose"
                 android:layout_width="80dp"
@@ -41,28 +40,15 @@
             android:layout_margin="4dp"
             android:layout_below="@+id/llTitle"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:hint="TRACK CODE"
-            app:startIconDrawable="@drawable/ic_logo"
+            android:hint="@string/travel_code"
             >
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etCode"
-                android:inputType="number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnFind"
+                android:id="@+id/btnSub"
                 style="@style/ButtonTrack"
+                android:layout_marginTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="FIND ROUTE" />
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnUpdate"
-                android:text="Update Track"
-                style="@style/ButtonTrack"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:text="SUBSCRIBE" />
         </com.google.android.material.textfield.TextInputLayout>
 
 

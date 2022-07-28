@@ -1,4 +1,10 @@
 <resources>
-    <string name="app_name">Track-in</string>
+    <string name="app_name">Track-In</string>
     <string name="ok">OK</string>
+    <string name="travel_code">TRAVEL CODE</string>
+    <string name="ubication_success">Location registered successfully</string>
+    <string name="need_code">You must enter a CODE</string>
+    <string name="code_no_available">Your CODE is not available yet</string>
+    <string name="no_points">Your trip is already in progress, but there is no track</string>
+    <string name="no_device_reg">El registo no esta permitido para este dispositivo.</string>
 </resources>

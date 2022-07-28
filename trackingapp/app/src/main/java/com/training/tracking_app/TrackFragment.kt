@@ -1,5 +1,7 @@
 package com.training.tracking_app
 
+import android.app.Activity
+import android.app.ProgressDialog.show
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
@@ -7,20 +9,19 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.preference.PreferenceManager
 import android.util.Log
+import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.training.tracking_app.Dto.PointDto
 import com.training.tracking_app.DtoLaravel.FindByCode
 import com.training.tracking_app.DtoLaravel.Trackin
 import com.training.tracking_app.helper.HelperApi
+import com.training.tracking_app.helper.showCustomToast
 import com.training.tracking_app.network.response.TravelResponse
 import com.training.tracking_app.network.response.api.ApiObject
 import kotlinx.coroutines.CoroutineScope
@@ -80,16 +81,22 @@ class TrackFragment : Fragment() {
             val ivClose = menu.findViewById<ImageView>(R.id.ivClose)
             var code = menu.findViewById<EditText>(R.id.etCode)
             val btnFind = menu.findViewById<Button>(R.id.btnFind)
+            val btnUpdate = menu.findViewById<Button>(R.id.btnUpdate)
             ivClose.setOnClickListener {
                 dialog.dismiss()
             }
-            btnFind.setOnClickListener {
+            btnUpdate.setOnClickListener {
                 if(!code.text.toString().equals("")){
-                    val bundle = Bundle()
-                    bundle.putString("code", code.text.toString())
                     findTravel(code.text.toString(), dialog)
                 } else {
-                    Toast.makeText(_view.context, "DEBE INGRESAR UN CODIGO", Toast.LENGTH_SHORT).show()
+                    Toast(_view.context).showCustomToast(getString(R.string.need_code), requireActivity())
+                }
+            }
+            btnFind.setOnClickListener {
+                if(!code.text.toString().equals("")){
+                    findTravel(code.text.toString(), dialog)
+                } else {
+                    Toast(_view.context).showCustomToast(getString(R.string.need_code), requireActivity())
                 }
             }
             //dialog.setCancelable(false)
@@ -102,6 +109,7 @@ class TrackFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun findTravel(code : String, dialog : BottomSheetDialog) {
+        clearMap()
         CoroutineScope(Dispatchers.IO).launch {
             val _res: Response<*>
             _res = ApiObject.getRetro().findTravel(code)
@@ -112,10 +120,10 @@ class TrackFragment : Fragment() {
                         if(_response.points != null)
                             drawRoute(_response.points)
                         else
-                            Toast.makeText(_view.context, "Su viaje ya se encuentra en progreso, pero no se tiene ningun track", Toast.LENGTH_SHORT).show()
+                            Toast(_view.context).showCustomToast(getString(R.string.no_points), requireActivity())
                         dialog.dismiss()
                     } else {
-                        Toast.makeText(_view.context, "Su viaje aun no se encuentra disponible", Toast.LENGTH_SHORT).show()
+                        Toast(_view.context).showCustomToast(getString(R.string.code_no_available), requireActivity())
                     }
                 }
             }
@@ -155,7 +163,14 @@ class TrackFragment : Fragment() {
         line.points = list
         line.color = Color.parseColor("#FB2E50")
         line.isGeodesic = true
+
         osmView.overlays.add(line)
+    }
+
+    private fun clearMap(){
+        osmView.overlays.forEach {
+            osmView.overlays.remove(it)
+        }
     }
 
     private fun drawMark(point: GeoPoint){
@@ -180,4 +195,6 @@ class TrackFragment : Fragment() {
         miniMap.height = dm.heightPixels / 5
         osmView.overlays.add(miniMap)
     }
+
+
 }

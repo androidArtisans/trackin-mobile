@@ -34,7 +34,7 @@
     <style name="HeaderText">
         <item name="android:textColor">@color/white</item>
         <item name="fontFamily">@font/titillium_web</item>
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">18dp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:textStyle">bold</item>
     </style>

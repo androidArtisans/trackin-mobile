@@ -9,11 +9,13 @@
         <entry key="..\:/DIP/FINAL/trackin-mobile/trackingapp/app/src/main/res/layout/activity_main.xml" value="0.5" />
         <entry key="..\:/DIP/FINAL/trackin-mobile/trackingapp/app/src/main/res/layout/activity_splash.xml" value="0.3775933609958506" />
         <entry key="..\:/DIP/FINAL/trackin-mobile/trackingapp/app/src/main/res/layout/bottom_sheet_dialog.xml" value="0.38944365192582026" />
-        <entry key="..\:/DIP/FINAL/trackin-mobile/trackingapp/app/src/main/res/layout/fragment_gps.xml" value="0.18009118541033434" />
-        <entry key="..\:/DIP/FINAL/trackin-mobile/trackingapp/app/src/main/res/layout/fragment_notification.xml" value="0.25" />
+        <entry key="..\:/DIP/FINAL/trackin-mobile/trackingapp/app/src/main/res/layout/bottom_sheet_dialog_subscribe.xml" value="0.34646739130434784" />
+        <entry key="..\:/DIP/FINAL/trackin-mobile/trackingapp/app/src/main/res/layout/fragment_gps.xml" value="0.33" />
+        <entry key="..\:/DIP/FINAL/trackin-mobile/trackingapp/app/src/main/res/layout/fragment_notification.xml" value="0.5" />
         <entry key="..\:/DIP/FINAL/trackin-mobile/trackingapp/app/src/main/res/layout/fragment_track.xml" value="0.25" />
         <entry key="..\:/DIP/FINAL/trackin-mobile/trackingapp/app/src/main/res/layout/notification_item.xml" value="0.49447077409162715" />
         <entry key="..\:/DIP/FINAL/trackin-mobile/trackingapp/app/src/main/res/layout/splash_screen.xml" value="0.18009118541033434" />
+        <entry key="..\:/DIP/FINAL/trackin-mobile/trackingapp/app/src/main/res/layout/toast_trackin.xml" value="0.24947916666666667" />
         <entry key="..\:/DIP/Practices/trackingapp/app/src/main/res/layout/activity_main.xml" value="0.19010416666666666" />
         <entry key="..\:/DIP/Practices/trackingapp/app/src/main/res/layout/fragment_history.xml" value="0.15648148148148147" />
         <entry key="..\:/DIP/Practices/trackingapp/app/src/main/res/layout/fragment_info.xml" value="0.15648148148148147" />
