@@ -3,15 +3,25 @@ package com.training.tracking_app.helper
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.Task
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.google.gson.internal.LinkedTreeMap
 import com.training.tracking_app.DtoLaravel.FindByCode
 import com.training.tracking_app.DtoLaravel.Trackin
+import com.training.tracking_app.R
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
 object HelperApi {
+    var TAG = "LOG-TRACKIN"
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun findByCode(obj : List<*>) : FindByCode?{
         var _res : FindByCode? = null
@@ -46,4 +56,29 @@ object HelperApi {
         var formated = current.format(formater)
         return formated
     }
+
+    fun getRemoteConfig() : RemoteConfig?{
+        var res : RemoteConfig? = null
+        val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
+        val configSettings = remoteConfigSettings {
+            minimumFetchIntervalInSeconds = 60
+        }
+
+        remoteConfig.setConfigSettingsAsync(configSettings)
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+
+        remoteConfig.fetchAndActivate().addOnCompleteListener{ task ->
+            if (task.isSuccessful) {
+                res = RemoteConfig(remoteConfig["appTitle"].asString(),
+                        remoteConfig["maxDistance"].asString().toInt(),
+                        remoteConfig["minDistance"].asString().toInt(),
+                        remoteConfig["refreshTime"].asString().toInt(),
+                        remoteConfig["version"].asString().toInt())
+            }
+        }
+        Log.d("RES", res.toString())
+        return res
+    }
+
+
 }

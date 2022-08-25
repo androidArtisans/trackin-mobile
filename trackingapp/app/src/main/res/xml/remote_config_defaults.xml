@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<defaults>
+  <entry>
+    <key>appTitle</key>
+    <value>TrackIn</value>
+  </entry>
+  <entry>
+    <key>maxDistance</key>
+    <value>12</value>
+  </entry>
+  <entry>
+    <key>refreshTime</key>
+    <value>5</value>
+  </entry>
+  <entry>
+    <key>minDistance</key>
+    <value>10</value>
+  </entry>
+  <entry>
+    <key>version</key>
+    <value>1</value>
+  </entry>
+</defaults>
