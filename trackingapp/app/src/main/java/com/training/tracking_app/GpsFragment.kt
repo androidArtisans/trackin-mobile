@@ -24,6 +24,8 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.gun0912.tedpermission.provider.TedPermissionProvider.context
 import com.training.tracking_app.DtoLaravel.Device
 import com.training.tracking_app.DtoLaravel.Trackin
@@ -91,16 +93,36 @@ class GpsFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("MissingPermission") //permission are checked before
     fun readLastKnownLocation() {
+        var _point = Trackin(
+            "10",
+            "12",
+            "- REGISTRO MANUAL POR 123456 - ",
+            "1231231",
+            HelperApi.getDateMySQL(),
+            "Automatic"
+        )
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
                 location?.let { updateLocation(it) }
             }
     }
+    fun registerFireStore(point : Trackin){
+        val db = Firebase.firestore
+        /* FIREBASE */
+        db.collection("test")
+            .add(point)
+            .addOnSuccessListener {
+                Log.d(TAG, "REFERENCE ${it.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "ERROR ", e)
+            }
+        /* FIREBASE*/
+    }
     @RequiresApi(Build.VERSION_CODES.O)
     fun updateLocation(newLocation: Location) {
         lastLocation = newLocation
         var androidId = macAddres()
-        Log.d(TAG, androidId)
         var _point = Trackin(
             newLocation.latitude.toString(),
             newLocation.longitude.toString(),
@@ -109,6 +131,8 @@ class GpsFragment : Fragment() {
             HelperApi.getDateMySQL(),
             "Automatic"
             )
+
+        registerFireStore(_point)
         CoroutineScope(Dispatchers.IO).launch {
             val _res: Response<*>
             _res = ApiObject.getRetro().addTrackin(_point)

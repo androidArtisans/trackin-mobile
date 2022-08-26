@@ -1,7 +1,5 @@
 package com.training.tracking_app
 
-import android.app.Activity
-import android.app.ProgressDialog.show
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
@@ -9,7 +7,6 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.preference.PreferenceManager
 import android.util.Log
-import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,18 +14,17 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.training.tracking_app.Dto.PointDto
 import com.training.tracking_app.DtoLaravel.FindByCode
 import com.training.tracking_app.DtoLaravel.Trackin
 import com.training.tracking_app.helper.HelperApi
 import com.training.tracking_app.helper.showCustomToast
-import com.training.tracking_app.network.response.TravelResponse
 import com.training.tracking_app.network.response.api.ApiObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 import org.osmdroid.config.Configuration
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
 import org.osmdroid.views.MapController
 import org.osmdroid.views.MapView
@@ -42,39 +38,34 @@ import retrofit2.Response
 
 class TrackFragment : Fragment() {
 
-    var code : String? = null
-
-    lateinit var _view : View
+    val ZOOM = 30
 
     val cbba = GeoPoint(-17.4140, -66.1653)
+    var code : String? = null
+
+    private lateinit var _view : View
     private lateinit var osmView : MapView
     private lateinit var mapController : MapController
 
-    val _listPoint = arrayListOf<PointDto>(
-        PointDto("-17.3978832","-66.1530828", "",""),
-        PointDto("-17.397788", "-66.151195","",""),
-        PointDto("-17.4150","-66.1663","",""),
-        PointDto("-17.4155","-66.1668","","")
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-
-        val ctx: Context = requireActivity().applicationContext
-        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
-
     }
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        val ctx: Context = requireActivity().applicationContext
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
+
         _view = inflater.inflate(R.layout.fragment_track, container, false)
         var btnSheet = _view.findViewById<ImageView>(R.id.btnSheetBottom)
+
         btnSheet.setOnClickListener {
             val dialog = BottomSheetDialog(_view.context)
             val menu = inflater.inflate(R.layout.bottom_sheet_dialog, null)
@@ -107,6 +98,10 @@ class TrackFragment : Fragment() {
         return _view
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun findTravel(code : String, dialog : BottomSheetDialog) {
         clearMap()
@@ -137,10 +132,11 @@ class TrackFragment : Fragment() {
     }
 
     private fun mapConfig(){
-        osmView = _view.findViewById<MapView>(R.id.osmView)
+        osmView = _view.findViewById(R.id.osmView)
+        osmView.setTileSource(TileSourceFactory.MAPNIK)
         mapController = osmView.controller as MapController
         mapController.setCenter(cbba)
-        mapController.setZoom(15)
+        mapController.setZoom(ZOOM)
         osmView.setMultiTouchControls(true)
     }
 
