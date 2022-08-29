@@ -2,6 +2,7 @@ package com.training.tracking_app
 
 import android.content.Context
 import android.graphics.Color
+import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
@@ -14,6 +15,15 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.ktx.toObjects
+import com.google.firebase.ktx.Firebase
+import com.training.tracking_app.DtoFirestore.DestinationDto
+import com.training.tracking_app.DtoFirestore.NotificationDto
+import com.training.tracking_app.DtoFirestore.RouteDto
+import com.training.tracking_app.DtoFirestore.TravelDto
 import com.training.tracking_app.DtoLaravel.FindByCode
 import com.training.tracking_app.DtoLaravel.Trackin
 import com.training.tracking_app.helper.HelperApi
@@ -38,13 +48,18 @@ import retrofit2.Response
 
 class TrackFragment : Fragment() {
 
-    val ZOOM = 30
+    private val DEFAULT_ZOOM = 30
 
-    val cbba = GeoPoint(-17.4140, -66.1653)
+    private val db = Firebase.firestore
+    private val cbba = GeoPoint(-17.4140, -66.1653)
+
+    private var travelPoints = ArrayList<GeoPoint>()
+    private var notificationPoints = ArrayList<GeoPoint>()
+
     var code : String? = null
-
     private lateinit var _view : View
     private lateinit var osmView : MapView
+
     private lateinit var mapController : MapController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,8 +67,6 @@ class TrackFragment : Fragment() {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
     }
-
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreateView(
@@ -64,27 +77,27 @@ class TrackFragment : Fragment() {
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
 
         _view = inflater.inflate(R.layout.fragment_track, container, false)
-        var btnSheet = _view.findViewById<ImageView>(R.id.btnSheetBottom)
+        val btnSheet = _view.findViewById<ImageView>(R.id.btnSheetBottom)
 
         btnSheet.setOnClickListener {
             val dialog = BottomSheetDialog(_view.context)
             val menu = inflater.inflate(R.layout.bottom_sheet_dialog, null)
             val ivClose = menu.findViewById<ImageView>(R.id.ivClose)
-            var code = menu.findViewById<EditText>(R.id.etCode)
+            val code = menu.findViewById<EditText>(R.id.etCode)
             val btnFind = menu.findViewById<Button>(R.id.btnFind)
             val btnUpdate = menu.findViewById<Button>(R.id.btnUpdate)
             ivClose.setOnClickListener {
                 dialog.dismiss()
             }
-            btnUpdate.setOnClickListener {
-                if(!code.text.toString().equals("")){
+           /* btnUpdate.setOnClickListener {
+                if(code.text.toString() != ""){
                     findTravel(code.text.toString(), dialog)
                 } else {
                     Toast(_view.context).showCustomToast(getString(R.string.need_code), requireActivity())
                 }
-            }
+            }*/
             btnFind.setOnClickListener {
-                if(!code.text.toString().equals("")){
+                if(code.text.toString() != ""){
                     findTravel(code.text.toString(), dialog)
                 } else {
                     Toast(_view.context).showCustomToast(getString(R.string.need_code), requireActivity())
@@ -94,41 +107,79 @@ class TrackFragment : Fragment() {
             dialog.setContentView(menu)
             dialog.show()
         }
+
         init()
         return _view
     }
 
-    override fun onResume() {
-        super.onResume()
+    private fun init(){
+        Toast(_view.context).showCustomToast(getString(R.string.search_box), requireActivity())
+        mapConfig()
+        drawCompass()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun findTravel(code : String, dialog : BottomSheetDialog) {
         clearMap()
-        CoroutineScope(Dispatchers.IO).launch {
-            val _res: Response<*>
-            _res = ApiObject.getRetro().findTravel(code)
-            val _response : FindByCode? = HelperApi.findByCode(_res.body()!! as List<*>)
-            activity?.runOnUiThread{
-                if(_res.isSuccessful){
-                    if(_response != null){
-                        if(_response.points != null)
-                            drawRoute(_response.points)
-                        else
-                            Toast(_view.context).showCustomToast(getString(R.string.no_points), requireActivity())
-                        dialog.dismiss()
-                    } else {
-                        Toast(_view.context).showCustomToast(getString(R.string.code_no_available), requireActivity())
-                    }
-                }
+        val tvTitle = _view.findViewById<TextView>(R.id.tvTitle)
+        /* GET TRAVEL DATA */
+        db
+        .collection("travel")
+        .whereEqualTo("code", code)
+        .limit(1)
+        .addSnapshotListener{snapshots, _ ->
+            val _idTravel = snapshots!!.documents[0].id.toString()
+            val travel = snapshots.documents[0].toObject(TravelDto::class.java)
+            tvTitle.text = travel!!.code
+            findRoute(travel.route)
+            getNotifications(_idTravel)
+            drawRoute(notificationPoints)
+            dialog.dismiss()
+        }
+        /* END TRAVEL DATA */
+    }
+
+    private fun getNotifications(idTravel : String){
+        db
+        .collection("notification")
+        .whereEqualTo("travel", idTravel)
+        .addSnapshotListener{snapshots, _ ->
+            for(dc in snapshots!!.documentChanges){
+                val notif = dc.document.toObject(NotificationDto::class.java)
+                notificationPoints.add(GeoPoint(notif.coordinates.latitude, notif.coordinates.longitude))
             }
         }
     }
 
-    private fun init(){
-        mapConfig()
-        drawCompass()
-        //drawRoute(_listPoint)
+    private fun findRoute(idRoute : String){
+        db
+        .collection("route")
+        .document(idRoute)
+        .addSnapshotListener{ snapshots, _ ->
+            if(snapshots!= null){
+                val route = snapshots.toObject(RouteDto::class.java)
+                if(route != null){
+                    getPoint(route.to)
+                    getPoint(route.from)
+                    drawRoute(travelPoints)
+
+                }
+            }
+        }
+
+    }
+
+    private fun getPoint(idDestination : String) {
+        var res = GeoPoint(0.0,0.0)
+        db
+        .collection("destination")
+        .document(idDestination)
+        .addSnapshotListener { snapshots, _ ->
+            if(snapshots != null){
+                val destination = snapshots.toObject(DestinationDto::class.java)
+                res = GeoPoint(destination!!.coordinates.latitude, destination.coordinates.longitude)
+                travelPoints.add(res)
+            }
+        }
     }
 
     private fun mapConfig(){
@@ -136,7 +187,7 @@ class TrackFragment : Fragment() {
         osmView.setTileSource(TileSourceFactory.MAPNIK)
         mapController = osmView.controller as MapController
         mapController.setCenter(cbba)
-        mapController.setZoom(ZOOM)
+        mapController.setZoom(DEFAULT_ZOOM)
         osmView.setMultiTouchControls(true)
     }
 
@@ -147,19 +198,14 @@ class TrackFragment : Fragment() {
         osmView.overlays.add(compass)
     }
 
-    private fun drawRoute( listPoint : ArrayList<Trackin>?) {
-        val list = ArrayList<GeoPoint>()
-        for ( p : Trackin in listPoint!!){
-            val _actual = GeoPoint(p.latitude.toDouble(), p.longitude.toDouble())
-            list.add(_actual)
-            drawMark(_actual)
+    private fun drawRoute( listPoint : ArrayList<GeoPoint>?) {
+        for ( p in listPoint!!){
+            drawMark(p)
         }
-        Log.d("TAG", list.toString())
         val line = Polyline()
-        line.points = list
+        line.points = listPoint
         line.color = Color.parseColor("#FB2E50")
         line.isGeodesic = true
-
         osmView.overlays.add(line)
     }
 
@@ -172,7 +218,9 @@ class TrackFragment : Fragment() {
     private fun drawMark(point: GeoPoint){
         val markerMe = Marker(osmView)
         markerMe.position = point
-        markerMe.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
+        markerMe.setIcon(_view.context.resources.getDrawable(R.drawable.marker))
+        markerMe.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        markerMe.setDraggable(true);
         osmView.invalidate()
         osmView.overlays.add(markerMe)
     }
@@ -191,6 +239,4 @@ class TrackFragment : Fragment() {
         miniMap.height = dm.heightPixels / 5
         osmView.overlays.add(miniMap)
     }
-
-
 }

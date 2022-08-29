@@ -10,4 +10,5 @@
     <string name="subs_ok">Correct subscription</string>
     <string name="bad_sequence">Something went wrong consult with the administrator.
 </string>
+    <string name="search_box">Search your track in te search box</string>
 </resources>

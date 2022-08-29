@@ -33,6 +33,7 @@ class SplashActivity : AppCompatActivity() {
         remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
         remoteConfig.fetchAndActivate().addOnCompleteListener{ task ->
             if (task.isSuccessful) {
+                HelperApi.showLog("REMOTE CONFIG DONE...")
                 binding.tvAppTitle.text = remoteConfig["appTitle"].asString()
                 binding.tvVersion.text = "VERSIÓN ${remoteConfig["version"].asString()}"
             }
@@ -44,6 +45,6 @@ class SplashActivity : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
             finish()
-        }, 5000)
+        }, 2000)
     }
 }

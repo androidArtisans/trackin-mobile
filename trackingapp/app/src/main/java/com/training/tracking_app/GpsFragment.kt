@@ -1,32 +1,21 @@
 package com.training.tracking_app
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.pm.PackageManager
 import android.location.Location
-import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
-import android.telephony.TelephonyManager
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.gun0912.tedpermission.provider.TedPermissionProvider.context
 import com.training.tracking_app.DtoLaravel.Device
 import com.training.tracking_app.DtoLaravel.Trackin
 import com.training.tracking_app.databinding.FragmentGpsBinding
@@ -37,9 +26,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
-import java.net.NetworkInterface
-import java.net.SocketException
-import java.util.*
 
 
 class GpsFragment : Fragment() {
@@ -109,7 +95,7 @@ class GpsFragment : Fragment() {
     fun registerFireStore(point : Trackin){
         val db = Firebase.firestore
         /* FIREBASE */
-        db.collection("test")
+        db.collection("travel")
             .add(point)
             .addOnSuccessListener {
                 Log.d(TAG, "REFERENCE ${it.id}")
@@ -148,9 +134,8 @@ class GpsFragment : Fragment() {
     }
 
     @SuppressLint("HardwareIds")
-    fun macAddres() : String{
+    fun macAddres(): String {
         val ctx = requireContext().applicationContext
-        val addr = android.provider.Settings.Secure.getString(ctx.getContentResolver(), "android_id")
-        return addr
+        return Settings.Secure.getString(ctx.contentResolver, "android_id")
     }
 }

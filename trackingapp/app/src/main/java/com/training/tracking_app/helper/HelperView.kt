@@ -12,7 +12,7 @@ fun Toast.showCustomToast(message: String, activity: Activity){
     val textView = layout.findViewById<TextView>(R.id.toast_text)
     textView.text = message
     this.apply {
-        duration = Toast.LENGTH_LONG
+        duration = Toast.LENGTH_SHORT
         view = layout
         show()
     }

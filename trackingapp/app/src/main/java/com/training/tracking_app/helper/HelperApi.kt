@@ -22,6 +22,10 @@ import kotlin.collections.ArrayList
 object HelperApi {
     var TAG = "LOG-TRACKIN"
 
+    fun showLog(msg : String){
+        Log.d(TAG, msg)
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun findByCode(obj : List<*>) : FindByCode?{
         var _res : FindByCode? = null
