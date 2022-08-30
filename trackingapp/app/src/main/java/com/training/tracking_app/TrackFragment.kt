@@ -1,6 +1,7 @@
 package com.training.tracking_app
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.drawable.Drawable
 import android.icu.text.Normalizer.NO
 import android.os.Build
@@ -20,6 +21,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.training.tracking_app.DtoFirestore.*
+import com.training.tracking_app.data.dao.TravelDao
 import com.training.tracking_app.databinding.FragmentGpsBinding
 import com.training.tracking_app.databinding.FragmentTrackBinding
 import com.training.tracking_app.helper.HelperApi
@@ -55,6 +57,7 @@ class TrackFragment : Fragment() {
 
     var _binding : FragmentTrackBinding? = null
     private val binding get() = _binding
+    val app = requireContext() as TravelApp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,8 +71,10 @@ class TrackFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTrackBinding.inflate(inflater, container, false)
+
         val ctx: Context = requireActivity().applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
+
         val btnSheet = binding!!.btnSheetBottom
 
         btnSheet.setOnClickListener {
@@ -149,11 +154,14 @@ class TrackFragment : Fragment() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun getData(code : String){
+
         var _destination = DestinationDto()
         val documentsNotif = ArrayList<NotificationDto>()
         val notifiticationPoints = ArrayList<TrackMarkerDto>()
         var travelId = ""
+
         try {
+
             val documentTravel = getTravel(code)[0]
             if(documentTravel != null){
 
@@ -251,7 +259,7 @@ class TrackFragment : Fragment() {
     private fun drawMarker(data : TrackMarkerDto){
         val _marker = Marker(osmView)
         _marker.position = data.point
-        _marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+        _marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_CENTER)
         _marker.title = data.title
         if(data.icon > 0 )
             _marker.icon = resources.getDrawable(data.icon)

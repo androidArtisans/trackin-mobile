@@ -6,11 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import androidx.room.Room
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.training.tracking_app.data.TravelDb
+import com.training.tracking_app.data.dao.TravelDao
 import com.training.tracking_app.databinding.ActivityMainBinding
 import com.training.tracking_app.databinding.ActivitySplashBinding
 import com.training.tracking_app.helper.HelperApi
@@ -38,6 +41,8 @@ class SplashActivity : AppCompatActivity() {
                 binding.tvVersion.text = "VERSIÓN ${remoteConfig["version"].asString()}"
             }
         }
+
+
 
         setContentView(binding.root)
         handler = Handler()
