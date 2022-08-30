@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.tasks.Task
+import com.google.firebase.Timestamp
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.get
@@ -14,6 +15,7 @@ import com.google.gson.internal.LinkedTreeMap
 import com.training.tracking_app.DtoLaravel.FindByCode
 import com.training.tracking_app.DtoLaravel.Trackin
 import com.training.tracking_app.R
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -58,6 +60,13 @@ object HelperApi {
         var current = LocalDateTime.now()
         var formater = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         var formated = current.format(formater)
+        return formated
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun formatDateView(_time : Timestamp) : String {
+        var formater = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US)
+        var formated = formater.format(_time.toDate().time)
         return formated
     }
 

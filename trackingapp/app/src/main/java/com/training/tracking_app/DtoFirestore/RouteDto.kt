@@ -7,4 +7,8 @@ data class RouteDto(val description : String,
                     val status : Boolean,
                     val to : String) : Serializable{
         constructor() : this("", "", false, "")
+
+
+
+
 }

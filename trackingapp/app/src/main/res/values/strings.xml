@@ -8,7 +8,7 @@
     <string name="no_points">Your trip is already in progress, but there is no track</string>
     <string name="no_device_reg">Registration is not allowed for this device</string>
     <string name="subs_ok">Correct subscription</string>
-    <string name="bad_sequence">Something went wrong consult with the administrator.
-</string>
+    <string name="bad_sequence">Something went wrong consult with the administrator.</string>
     <string name="search_box">Search your track in te search box</string>
+    <string name="travel_not_ready">Unable to get data to display</string>
 </resources>

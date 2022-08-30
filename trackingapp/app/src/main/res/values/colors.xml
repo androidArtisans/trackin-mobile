@@ -8,11 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <!--    APP COLORS  -->
-    <color name="app_primary">#fd7014</color>
-    <color name="app_secondary">#e15c04</color>
-    <color name="app_normal_text">#fd8f47</color>
-    <color name="app_pink_normal">#dc5802</color>
-    <color name="app_black">#111111</color>
-    <color name="app_white">#e6e6e6</color>
-    <color name="app_gray">#9F9DB2</color>
+    <color name="app_primary">#0CBA70</color>
+    <color name="app_secondary">#0A965A</color>
+    <color name="app_normal_text">#32C486</color>
+    <color name="app_pink_normal">#11B16D</color>
+    <color name="app_black">#323436</color>
+    <color name="app_white">#F7F7F7</color>
+    <color name="app_gray">#B5E6D1</color>
 </resources>
