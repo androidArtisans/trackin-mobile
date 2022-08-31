@@ -21,6 +21,7 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.training.tracking_app.DtoFirestore.*
+import com.training.tracking_app.data.RoomApp
 import com.training.tracking_app.data.dao.TravelDao
 import com.training.tracking_app.databinding.FragmentGpsBinding
 import com.training.tracking_app.databinding.FragmentTrackBinding
@@ -57,7 +58,7 @@ class TrackFragment : Fragment() {
 
     var _binding : FragmentTrackBinding? = null
     private val binding get() = _binding
-    val app = requireContext() as TravelApp
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +71,7 @@ class TrackFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         _binding = FragmentTrackBinding.inflate(inflater, container, false)
 
         val ctx: Context = requireActivity().applicationContext
@@ -155,13 +157,12 @@ class TrackFragment : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private suspend fun getData(code : String){
 
-        var _destination = DestinationDto()
+        var _destination: DestinationDto
         val documentsNotif = ArrayList<NotificationDto>()
         val notifiticationPoints = ArrayList<TrackMarkerDto>()
         var travelId = ""
 
         try {
-
             val documentTravel = getTravel(code)[0]
             if(documentTravel != null){
 

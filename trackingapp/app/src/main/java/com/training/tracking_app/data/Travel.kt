@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 @Entity
 data class Travel(
     @PrimaryKey(autoGenerate = true)
-    val id : Int
-,    val idTravel : String,
+    val id : Int,
+    val idTravel : String,
     val code : String,
-    val status : Boolean
+    var status : Boolean
 )

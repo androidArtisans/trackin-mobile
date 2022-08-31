@@ -6,6 +6,11 @@
         android:title="Track"
         />
     <item
+        android:id="@+id/notifications"
+        android:icon="@drawable/notif"
+        android:title="Notifications"
+        />
+    <item
         android:id="@+id/gps"
         android:icon="@drawable/send"
         android:title="GPS"

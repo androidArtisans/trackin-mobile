@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         setupPermissions()
         init()
     }
@@ -80,12 +81,12 @@ class MainActivity : AppCompatActivity() {
                         fragmentTrack.arguments = bundle
                         loadFragment(fragmentTrack)
                     }
-//                    R.id.notifications -> {
-//                        bundle.putString("code", "")
-//                        val fragmentNotyif = NotificationFragment()
-//                        fragmentNotyif.arguments = bundle
-//                        loadFragment(fragmentNotyif)
-//                    }
+                    R.id.notifications -> {
+                        bundle.putString("code", "")
+                        val fragmentNotyif = NotificationFragment()
+                        fragmentNotyif.arguments = bundle
+                        loadFragment(fragmentNotyif)
+                    }
                     R.id.gps -> {
                         bundle.putString("code", "")
                         val fragmentGps = GpsFragment()
