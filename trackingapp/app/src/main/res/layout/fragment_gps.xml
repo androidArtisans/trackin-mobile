@@ -37,17 +37,69 @@
 
     </LinearLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:layout_below="@+id/llContainer"
+        android:hint="MESSAGE REQUIRED ONLY WARNING AND ERROR"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:lines="8"
+            android:minLines="8"
+            android:gravity="top|start"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fbSend"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:layout_centerInParent="true"
-        android:backgroundTint="@color/app_primary"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/tilMsg"
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/app_info"
         android:elevation="0dp"
         android:src="@drawable/send"
         app:borderWidth="0dp"
-        app:fabCustomSize="150dp"
-        app:maxImageSize="100dp"
+        app:fabCustomSize="80dp"
+        app:maxImageSize="40dp"
+        app:tint="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fbSendWarning"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/tilMsg"
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/app_warning"
+        android:elevation="0dp"
+        android:src="@drawable/ic_warning"
+        app:borderWidth="0dp"
+        app:fabCustomSize="80dp"
+        app:maxImageSize="40dp"
+        app:tint="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fbSendError"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/tilMsg"
+        android:layout_margin="20dp"
+        android:backgroundTint="@color/app_error"
+        android:elevation="0dp"
+        android:src="@drawable/ic_error"
+        app:borderWidth="0dp"
+        app:fabCustomSize="80dp"
+        app:maxImageSize="40dp"
         app:tint="@color/white" />
 
 

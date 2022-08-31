@@ -15,6 +15,7 @@ import androidx.room.Room
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.gun0912.tedpermission.provider.TedPermissionProvider.context
 import com.training.tracking_app.DtoFirestore.TravelDto
 import com.training.tracking_app.DtoLaravel.FindByCode
 import com.training.tracking_app.DtoLaravel.Trackin
@@ -60,10 +61,14 @@ class NotificationFragment : Fragment() {
         binding!!.btnFind.setOnClickListener{
             if(!binding!!.etCode.text.toString().equals("")){
                 CoroutineScope(Dispatchers.IO).launch {
-                    getData(binding!!.etCode.text.toString().trim())
+                    val codeExists =getData(binding!!.etCode.text.toString().trim())
                     listTravelDB = _room.travelDao().getAll() as ArrayList
                     activity?.runOnUiThread{
-                        updateAdapter(listTravelDB)
+                        if(codeExists){
+                            updateAdapter(listTravelDB)
+                        } else {
+                            Toast(context).showCustomToast(getString(R.string.check_status_travel), requireActivity())
+                        }
                     }
                 }
             } else {
@@ -73,15 +78,22 @@ class NotificationFragment : Fragment() {
         return binding!!.root
     }
 
-    suspend fun getData(code : String){
-        var travelDB = _room.travelDao().getByCode(code)
-        HelperApi.showLog("EXISTE "+travelDB.toString())
+    suspend fun getData(code : String) : Boolean{
+        var res = false;
+        val travelDB = _room.travelDao().getByCode(code)
         if(travelDB == null){
-            val documentTravel = getTravel(code)[0]
-            val travelFB = documentTravel.toObject(TravelDto::class.java)!!
-            val newTravel = Travel(id=0, idTravel = documentTravel.id,code = travelFB.code, status = travelFB.status)
-            _room.travelDao().insert(newTravel)
+            val documentTravel = getTravel(code)
+            if(documentTravel.size > 0) {
+                val fbData = documentTravel[0]
+                val travelFB = fbData.toObject(TravelDto::class.java)!!
+                val newTravel = Travel(id=0, idTravel = fbData.id,code = travelFB.code, status = travelFB.status)
+                _room.travelDao().insert(newTravel)
+                res = true
+            }
+        } else {
+            res = true
         }
+        return res
     }
 
     private suspend fun getTravel(code : String) : List<DocumentSnapshot>{
@@ -123,7 +135,6 @@ class NotificationFragment : Fragment() {
     }
 
     private fun updateAdapter(listTravelDB : ArrayList<Travel>){
-        HelperApi.showLog("FILL "+listTravelDB.toString())
         adapter = TravelAdapter(listTravelDB)
         adapter.setClickListener(clickListener)
         var rv = binding!!.rvNotificacions
@@ -131,30 +142,5 @@ class NotificationFragment : Fragment() {
         rv.adapter = adapter
 
     }
-
-
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    private fun findTravel(code : String) {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val _res: Response<*>
-//            _res = ApiObject.getRetro().findTravel(code)
-//            activity?.runOnUiThread{
-//                if(_res.isSuccessful){
-//                    val _response : FindByCode? = HelperApi.findByCode(_res.body()!! as List<*>)
-//                    if(_response != null){
-//                        if(_response.points != null)
-//                            fillNotification(_response.points!!)
-//                        else
-//                            Toast(context).showCustomToast(getString(R.string.no_points), requireActivity())
-//                    } else {
-//                        Toast(context).showCustomToast(getString(R.string.code_no_available), requireActivity())
-//                    }
-//                }else {
-//                    Toast(context).showCustomToast(getString(R.string.code_no_available), requireActivity())
-//                }
-//            }
-//        }
-//    }
-
 
 }

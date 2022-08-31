@@ -18,9 +18,9 @@
         >
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="NOTIFICATIONS"
+            android:text="CHECK TRAVEL"
             style="@style/HeaderText"
             android:layout_weight="1"
             />

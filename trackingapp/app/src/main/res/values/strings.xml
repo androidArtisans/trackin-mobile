@@ -11,4 +11,8 @@
     <string name="bad_sequence">Something went wrong consult with the administrator.</string>
     <string name="search_box">Search your track in te search box</string>
     <string name="travel_not_ready">Unable to get data to display</string>
+    <string name="check_status_travel">Check the trip code, and its configuration to carry out the tracking</string>
+    <string name="registry_auto">Registro de automatico</string>
+    <string name="msg_required">A message is required for this type of notification</string>
+    <string name="success_reg">Successful registration</string>
 </resources>

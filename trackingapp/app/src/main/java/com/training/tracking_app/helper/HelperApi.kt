@@ -24,6 +24,10 @@ import kotlin.collections.ArrayList
 object HelperApi {
     var TAG = "LOG-TRACKIN"
 
+    var INFO = "info"
+    var ERROR = "error"
+    var WARNING = "warning"
+
     fun showLog(msg : String){
         Log.d(TAG, msg)
     }

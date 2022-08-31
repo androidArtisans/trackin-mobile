@@ -14,6 +14,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.room.Room
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.DocumentSnapshot
@@ -22,6 +23,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.training.tracking_app.DtoFirestore.*
 import com.training.tracking_app.data.RoomApp
+import com.training.tracking_app.data.TravelDb
 import com.training.tracking_app.data.dao.TravelDao
 import com.training.tracking_app.databinding.FragmentGpsBinding
 import com.training.tracking_app.databinding.FragmentTrackBinding
@@ -40,9 +42,13 @@ import org.osmdroid.views.MapController
 import org.osmdroid.views.MapView
 import org.osmdroid.views.overlay.Marker
 import org.osmdroid.views.overlay.MinimapOverlay
+import org.osmdroid.views.overlay.ScaleBarOverlay
 import org.osmdroid.views.overlay.compass.CompassOverlay
 import org.osmdroid.views.overlay.compass.InternalCompassOrientationProvider
 import org.osmdroid.views.overlay.gestures.RotationGestureOverlay
+import org.osmdroid.views.overlay.gridlines.LatLonGridlineOverlay2
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay
 
 class TrackFragment : Fragment() {
 
@@ -51,12 +57,13 @@ class TrackFragment : Fragment() {
     private lateinit var mapController : MapController
 
     private val db = Firebase.firestore
+    lateinit var _room : TravelDb
     private val cbba = GeoPoint(-17.4140, -66.1653)
     private var _travelMain = TravelDto()
     private var _routeMain = RouteDto()
     private var roadTravel = ArrayList<TrackMarkerDto>()
 
-    var _binding : FragmentTrackBinding? = null
+    private var _binding : FragmentTrackBinding? = null
     private val binding get() = _binding
 
 
@@ -64,6 +71,16 @@ class TrackFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        osmView.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        osmView.onPause()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -76,6 +93,7 @@ class TrackFragment : Fragment() {
 
         val ctx: Context = requireActivity().applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
+        _room = Room.databaseBuilder(container!!.context,TravelDb::class.java,"Track").build()
 
         val btnSheet = binding!!.btnSheetBottom
 
@@ -112,15 +130,30 @@ class TrackFragment : Fragment() {
             dialog.setContentView(menu)
             dialog.show()
         }
+
+        // <-- UPDATE -->
+        binding!!.btnUpdate.setOnClickListener{
+            init()
+            CoroutineScope(Dispatchers.IO).launch {
+                val travelActive = _room.travelDao().getActiveTravel()
+                if(travelActive != null) {
+                    getData(travelActive.code)
+                } else {
+                    activity?.runOnUiThread{
+                        Toast(requireContext()).showCustomToast(getString(R.string.check_status_travel), requireActivity())
+                    }
+                }
+            }
+        }
         init()
         return binding!!.root
     }
 
     private fun init(){
         mapConfig()
+        myLocation()
         drawCompass()
         rotationGesture()
-        miniMap()
     }
 
     private fun mapConfig(){
@@ -130,6 +163,13 @@ class TrackFragment : Fragment() {
         mapController.setCenter(cbba)
         mapController.setZoom(15)
         osmView.setMultiTouchControls(true)
+    }
+
+    private fun myLocation(){
+        val dm = this.resources.displayMetrics
+        val locationOverlay = MyLocationNewOverlay(GpsMyLocationProvider(context), osmView)
+        locationOverlay.enableMyLocation()
+        osmView.overlays.add(locationOverlay)
     }
 
     private fun drawCompass(){

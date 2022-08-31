@@ -13,7 +13,7 @@ class TravelViewHolder (val view : View) : RecyclerView.ViewHolder(view) {
 
     fun render(t : Travel){
         if(t.status) {
-            binding.ivIcon.setImageResource(R.drawable.marker)
+            binding.ivIcon.setImageResource(R.mipmap.marker_track)
         }
         binding.tvTitle.text = "- ${t.code.toUpperCase()} -"
         binding.tvDescription.text = t.status.toString()
