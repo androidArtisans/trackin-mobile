@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <defaults>
   <entry>
+    <key>realTravel</key>
+    <value>true</value>
+  </entry>
+  <entry>
     <key>appTitle</key>
-    <value>TrackIn</value>
+    <value>Tran Nacional</value>
   </entry>
   <entry>
     <key>maxDistance</key>
@@ -13,11 +17,15 @@
     <value>5</value>
   </entry>
   <entry>
+    <key>defaultZoom</key>
+    <value>15</value>
+  </entry>
+  <entry>
     <key>minDistance</key>
     <value>10</value>
   </entry>
   <entry>
     <key>version</key>
-    <value>1</value>
+    <value>2</value>
   </entry>
 </defaults>

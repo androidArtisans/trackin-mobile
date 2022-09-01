@@ -3,6 +3,7 @@ package com.training.tracking_app
 import android.content.Context
 import android.content.SharedPreferences
 import android.graphics.drawable.Drawable
+import android.icu.number.IntegerWidth
 import android.icu.text.Normalizer.NO
 import android.os.Build
 import android.os.Bundle
@@ -22,6 +23,10 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.get
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.training.tracking_app.DtoFirestore.*
 import com.training.tracking_app.data.RoomApp
 import com.training.tracking_app.data.TravelDb
@@ -30,6 +35,7 @@ import com.training.tracking_app.databinding.FragmentGpsBinding
 import com.training.tracking_app.databinding.FragmentTrackBinding
 import com.training.tracking_app.helper.HelperApi
 import com.training.tracking_app.helper.showCustomToast
+import io.grpc.LoadBalancer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -59,6 +65,7 @@ class TrackFragment : Fragment() {
 
     private val db = Firebase.firestore
     lateinit var _room : TravelDb
+    var drawReal = false
     private val cbba = GeoPoint(-17.4140, -66.1653)
     private var _travelMain = TravelDto()
     private var _routeMain = RouteDto()
@@ -95,8 +102,6 @@ class TrackFragment : Fragment() {
         val ctx: Context = requireActivity().applicationContext
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         _room = Room.databaseBuilder(container!!.context,TravelDb::class.java,"Track").build()
-
-
 
         val btnSheet = binding!!.btnSheetBottom
 
@@ -137,6 +142,20 @@ class TrackFragment : Fragment() {
         // <-- UPDATE -->
         binding!!.btnUpdate.setOnClickListener{
             init()
+
+            val remoteConfig: FirebaseRemoteConfig = Firebase.remoteConfig
+            val configSettings = remoteConfigSettings {
+                minimumFetchIntervalInSeconds = 60
+            }
+            remoteConfig.setConfigSettingsAsync(configSettings)
+            remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
+            remoteConfig.fetchAndActivate().addOnCompleteListener{ task ->
+                if (task.isSuccessful) {
+                    HelperApi.showLog("REMOTE CONFIG REALTRAVEL...")
+                    drawReal = remoteConfig["realTravel"].asBoolean()
+                }
+            }
+
             CoroutineScope(Dispatchers.IO).launch {
                 val travelActive = _room.travelDao().getActiveTravel()
                 if(travelActive != null) {
@@ -167,7 +186,6 @@ class TrackFragment : Fragment() {
     }
 
     private fun init(){
-
         mapConfig()
         myLocation()
         drawCompass()
@@ -256,6 +274,8 @@ class TrackFragment : Fragment() {
                 for(doc in getNotifications(travelId)){
                     val _notificationDto = doc.toObject(NotificationDto::class.java)!!
                     documentsNotif.add(_notificationDto)
+                    HelperApi.showLog("NOTIF "+_notificationDto.coordinates.toString())
+                    HelperApi.showLog("NOTIF ID "+doc.id)
                     notifiticationPoints.add(
                         TrackMarkerDto(
                             GeoPoint(_notificationDto.coordinates.latitude,_notificationDto.coordinates.longitude),
@@ -310,8 +330,7 @@ class TrackFragment : Fragment() {
             for(i in list){
                 geoPointList.add(i.point)
             }
-
-            drawRoad(geoPointList, R.color.app_secondary)
+            drawRoad(geoPointList, R.color.app_optimal_travel, 20f)
             activity?.runOnUiThread {
                 for (i in list) {
                     if (i.start) {
@@ -339,19 +358,25 @@ class TrackFragment : Fragment() {
         osmView.overlays.add(_marker)
     }
 
-    private fun drawRoad(list : ArrayList<GeoPoint>, color: Int){
+    private fun drawRoad(list : ArrayList<GeoPoint>, color: Int, _width: Float){
         val roadManager: RoadManager = OSRMRoadManager(this.context,"VIAJE")
         val road = roadManager.getRoad(list)
         val roadOverlay = RoadManager.buildRoadOverlay(road)
         roadOverlay.color = resources.getColor(color)
-        roadOverlay.width = 16F
+        roadOverlay.width = _width
         osmView.overlays.add(roadOverlay)
     }
 
+
+
     private fun drawNotif( listPoint : ArrayList<TrackMarkerDto>?) {
+
+        var list = ArrayList<GeoPoint>()
         if (listPoint != null) {
             for ( element in listPoint) {
                 val nodeMarker = Marker(osmView)
+                list.add(element.point)
+                HelperApi.showLog(element.point.toString())
                 nodeMarker.position = element.point
                 nodeMarker.title = element.title
                 nodeMarker.image = resources.getDrawable(R.mipmap.icon_notif)
@@ -359,7 +384,10 @@ class TrackFragment : Fragment() {
                 nodeMarker.subDescription = element.subDescription
                 osmView.getOverlays().add(nodeMarker)
             }
+            if(drawReal)
+                drawRoad(list, R.color.app_real_travel, 8f)
         }
+
         osmView.invalidate()
     }
 
