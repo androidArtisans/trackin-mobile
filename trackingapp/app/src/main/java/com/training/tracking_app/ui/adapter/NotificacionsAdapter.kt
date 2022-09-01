@@ -15,7 +15,7 @@ class NotificacionsAdapter(val notificacions:List<Trackin>) : RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: NotificacionViewHolder, position: Int) {
         val item = notificacions[position]
-        holder.render(item)
+        //holder.render(item)
     }
 
     override fun getItemCount(): Int  = notificacions.size

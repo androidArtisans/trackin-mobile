@@ -29,31 +29,21 @@
             android:layout_height="match_parent"
             android:padding="6dp"
             android:orientation="vertical"
+            android:gravity="center"
+            android:layout_gravity="center"
             >
             <TextView
+                tools:text="TRAVEL CODE"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/LabelNotification"
+                />
+            <TextView
                 android:id="@+id/tvTitle"
-                tools:text="TITULO"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/TitleNotification"
-                />
-            <TextView
-                android:id="@+id/tvDescription"
+                tools:text="00002"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:text="The standard chunk of Lorem Ipsum used since the 1500s is reproduced below for those interested. Sections 1.10.32 and 1.10.33 from de Finibus Bonorum et Malorum by Cicero"
-                android:textSize="10sp"
-                android:maxLines="2"
-                android:ellipsize="end"
-                />
-            <TextView
-                android:id="@+id/tvDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                tools:text="12/07/2022"
-                android:textSize="8dp"
-                android:textAlignment="textEnd"
-                android:textStyle="bold"
+                style="@style/CodeNotification"
                 />
 
         </LinearLayout>

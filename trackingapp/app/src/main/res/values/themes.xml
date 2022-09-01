@@ -60,10 +60,22 @@
 
     </style>
 <!-- NOTIFICATIONS -->
-    <style name="TitleNotification">
-        <item name="fontFamily">@font/ropa_sans</item>
-        <item name="android:textSize">14dp</item>
+    <style name="LabelNotification">
+        <item name="fontFamily">@font/ubuntu_medium</item>
+        <item name="android:textSize">15dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/app_default</item>
+    </style>
+    <style name="CodeNotification">
+        <item name="fontFamily">@font/titillium_web</item>
+        <item name="android:textSize">30dp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:gravity">center</item>
         <item name="textAllCaps">true</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">end</item>

@@ -18,7 +18,7 @@
     <color name="app_info">#2ABAF3</color>
     <color name="app_error">#F56463</color>
     <color name="app_warning">#F2885D</color>
-    <color name="app_default">#A0AFC5</color>
+    <color name="app_default">#999999</color>
     <color name="app_toast">#6244C0</color>
     <color name="app_optimal_travel">#02ADFB</color>
     <color name="app_real_travel">#CA8315</color>
