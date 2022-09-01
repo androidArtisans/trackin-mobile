@@ -11,17 +11,16 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:orientation="horizontal"
-        android:background="@color/app_primary"
         android:gravity="center"
         android:layout_alignParentTop="true"
         >
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="REGISTRY UBICATION"
-            style="@style/HeaderText"
-            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:text="PRUEBA"
+            style="@style/HeaderTextSecondary"
+
             />
 
 

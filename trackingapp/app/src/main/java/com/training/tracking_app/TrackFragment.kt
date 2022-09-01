@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.StrictMode
 import android.preference.PreferenceManager
+import android.view.GestureDetector
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -95,6 +96,8 @@ class TrackFragment : Fragment() {
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx))
         _room = Room.databaseBuilder(container!!.context,TravelDb::class.java,"Track").build()
 
+
+
         val btnSheet = binding!!.btnSheetBottom
 
         btnSheet.setOnClickListener {
@@ -149,11 +152,27 @@ class TrackFragment : Fragment() {
         return binding!!.root
     }
 
+    private fun setTitle(){
+        CoroutineScope(Dispatchers.IO).launch {
+            var dataDB = _room.travelDao().getActiveTravel()
+            activity?.runOnUiThread{
+                if(dataDB != null){
+                    binding!!.tvTitle.text = " TRAVEL > ${dataDB.code.toString().uppercase()}"
+                } else {
+                    binding!!.tvTitle.text = " TRAVEL > -- "
+                    Toast(context).showCustomToast(getString(R.string.travel_select), requireActivity())
+                }
+            }
+        }
+    }
+
     private fun init(){
+
         mapConfig()
         myLocation()
         drawCompass()
-        rotationGesture()
+        //rotationGesture()
+        setTitle()
     }
 
     private fun mapConfig(){
@@ -211,7 +230,7 @@ class TrackFragment : Fragment() {
                 _travelMain = documentTravel.toObject(TravelDto::class.java)!!
 
                 _routeMain = getRoute(_travelMain.route).toObject(RouteDto::class.java)!!
-                _destination = getGeoPointFs(_routeMain.to).toObject(DestinationDto::class.java)!!
+                _destination = getGeoPointFs(_routeMain.from).toObject(DestinationDto::class.java)!!
                 val iniTravel = TrackMarkerDto(GeoPoint(_destination.coordinates.latitude, _destination.coordinates.longitude),
                     R.mipmap.end_point,
                     _destination.name,
@@ -222,7 +241,7 @@ class TrackFragment : Fragment() {
                 )
                 roadTravel.add(iniTravel)
 
-                _destination = getGeoPointFs(_routeMain.from).toObject(DestinationDto::class.java)!!
+                _destination = getGeoPointFs(_routeMain.to).toObject(DestinationDto::class.java)!!
                 val endTravel = TrackMarkerDto(GeoPoint(_destination.coordinates.latitude, _destination.coordinates.longitude),
                     R.mipmap.start_truck,
                     _destination.name,
@@ -297,7 +316,7 @@ class TrackFragment : Fragment() {
                 for (i in list) {
                     if (i.start) {
                         osmView.controller.setCenter(i.point)
-                        osmView.controller.setZoom(20)
+                        osmView.controller.setZoom(16)
                     }
                     drawMarker(i)
                 }

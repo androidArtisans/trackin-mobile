@@ -65,7 +65,22 @@ class GpsFragment : Fragment() {
                 Toast(context).showCustomToast( getString(R.string.msg_required), requireActivity())
             }
         }
+        setTitle()
         return binding!!.root
+    }
+
+    private fun setTitle(){
+        CoroutineScope(Dispatchers.IO).launch {
+            var dataDB = _room.travelDao().getActiveTravel()
+            activity?.runOnUiThread{
+                if(dataDB != null){
+                    binding!!.tvTitle.text = "TRACKING > TRAVEL > ${dataDB.code.toString().uppercase()}"
+                } else {
+                    binding!!.tvTitle.text = "TRACKING > TRAVEL > --"
+                    Toast(context).showCustomToast(getString(R.string.travel_select), requireActivity())
+                }
+            }
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -89,14 +104,14 @@ class GpsFragment : Fragment() {
                 msg,
                 0,
                 _type,
-                travelActive.idTravel
+                travelActive!!.idTravel
             )
             db.collection("notification").add(_fbNotification)
                 .addOnSuccessListener {
-                    HelperApi.showLog(it.id)
+                    HelperApi.showLog("SUCCESS "+it.id)
                 }
                 .addOnFailureListener { e ->
-                    HelperApi.showLog(e.toString())
+                    HelperApi.showLog("FAILURE "+ e.toString())
                 }
             activity?.runOnUiThread{
                 binding!!.etMsg.setText("")

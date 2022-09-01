@@ -15,4 +15,6 @@
     <string name="registry_auto">Registro de automatico</string>
     <string name="msg_required">A message is required for this type of notification</string>
     <string name="success_reg">Successful registration</string>
+    <string name="no_db_travel">There is no record of any trip</string>
+    <string name="travel_select">You must select a travel before performing actions on this screen</string>
 </resources>

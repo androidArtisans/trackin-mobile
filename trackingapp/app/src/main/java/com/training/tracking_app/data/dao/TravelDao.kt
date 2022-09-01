@@ -10,13 +10,13 @@ interface TravelDao {
     fun getAll() : List<Travel>
 
     @Query("SELECT * FROM Travel WHERE id = :id")
-    suspend fun getById(id : Int) : Travel
+    suspend fun getById(id : Int) : Travel?
 
     @Query("SELECT * FROM Travel WHERE status = 1 ORDER BY id desc LIMIT 1")
-    suspend fun getActiveTravel() : Travel
+    suspend fun getActiveTravel() : Travel?
 
-    @Query("SELECT * FROM Travel WHERE status = 1 AND code = :code")
-    suspend fun getByCode(code : String) : Travel
+    @Query("SELECT * FROM Travel WHERE code = :code")
+    suspend fun getByCode(code : String) : Travel?
 
     @Update
     suspend fun update(travel : Travel)

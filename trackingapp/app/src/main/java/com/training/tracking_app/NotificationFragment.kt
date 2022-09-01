@@ -58,10 +58,25 @@ class NotificationFragment : Fragment() {
         _room = Room.databaseBuilder(container!!.context,TravelDb::class.java,"Track").build()
         initRecyclerView(binding!!.root)
 
+        binding!!.btnAll.setOnClickListener{
+            CoroutineScope(Dispatchers.IO).launch {
+                listTravelDB.clear()
+                listTravelDB = _room.travelDao().getAll() as ArrayList
+                activity?.runOnUiThread{
+                    if(listTravelDB.size > 0)
+                        updateAdapter(listTravelDB)
+                    else
+                        Toast(context).showCustomToast(getString(R.string.no_db_travel), requireActivity())
+                }
+            }
+        }
+
         binding!!.btnFind.setOnClickListener{
             if(!binding!!.etCode.text.toString().equals("")){
                 CoroutineScope(Dispatchers.IO).launch {
-                    val codeExists =getData(binding!!.etCode.text.toString().trim())
+                    var codeInput = binding!!.etCode.text.toString().trim()
+                    val codeExists =getData(codeInput)
+                    listTravelDB.clear()
                     listTravelDB = _room.travelDao().getAll() as ArrayList
                     activity?.runOnUiThread{
                         if(codeExists){
@@ -86,7 +101,7 @@ class NotificationFragment : Fragment() {
             if(documentTravel.size > 0) {
                 val fbData = documentTravel[0]
                 val travelFB = fbData.toObject(TravelDto::class.java)!!
-                val newTravel = Travel(id=0, idTravel = fbData.id,code = travelFB.code, status = travelFB.status)
+                val newTravel = Travel(id=0, idTravel = fbData.id,code = travelFB.code, status = false)
                 _room.travelDao().insert(newTravel)
                 res = true
             }
@@ -101,12 +116,13 @@ class NotificationFragment : Fragment() {
         return snapshot.documents
     }
 
-
     var clickListener = object: ClickListener {
         override fun onClickTravel(view: View, travel: Travel) {
             CoroutineScope(Dispatchers.IO).launch {
+                listTravelDB.clear()
                 listTravelDB = _room.travelDao().getAll() as ArrayList
                 setStatus(travel.id,listTravelDB)
+                listTravelDB.clear()
                 listTravelDB = _room.travelDao().getAll() as ArrayList
                 activity?.runOnUiThread{
                     updateAdapter(listTravelDB)
@@ -121,7 +137,7 @@ class NotificationFragment : Fragment() {
             _room.travelDao().update(i)
         }
         var travelDB = _room.travelDao().getById(id)
-        travelDB.status = true
+        travelDB!!.status = true
         _room.travelDao().update(travelDB)
 
     }
