@@ -214,7 +214,7 @@ class TrackFragment : Fragment() {
                 _destination = getGeoPointFs(_routeMain.to).toObject(DestinationDto::class.java)!!
                 val iniTravel = TrackMarkerDto(GeoPoint(_destination.coordinates.latitude, _destination.coordinates.longitude),
                     R.mipmap.end_point,
-                    "INIT TRAVEL",
+                    _destination.name,
                     "START TO ${HelperApi.formatDateView(_travelMain.hora)}",
                     0,
                     false,
@@ -225,7 +225,7 @@ class TrackFragment : Fragment() {
                 _destination = getGeoPointFs(_routeMain.from).toObject(DestinationDto::class.java)!!
                 val endTravel = TrackMarkerDto(GeoPoint(_destination.coordinates.latitude, _destination.coordinates.longitude),
                     R.mipmap.start_truck,
-                    "END TRAVEL",
+                    _destination.name,
                     "END TO: ${HelperApi.formatDateView(_travelMain.llegada)}",
                     0,
                     true,
@@ -290,10 +290,19 @@ class TrackFragment : Fragment() {
             val geoPointList = ArrayList<GeoPoint>()
             for(i in list){
                 geoPointList.add(i.point)
-                drawMarker(i)
             }
+
             drawRoad(geoPointList, R.color.app_secondary)
-            osmView.invalidate()
+            activity?.runOnUiThread {
+                for (i in list) {
+                    if (i.start) {
+                        osmView.controller.setCenter(i.point)
+                        osmView.controller.setZoom(20)
+                    }
+                    drawMarker(i)
+                }
+                osmView.invalidate()
+            }
         }
     }
 

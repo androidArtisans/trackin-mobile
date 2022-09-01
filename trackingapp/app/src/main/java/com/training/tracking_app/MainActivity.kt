@@ -11,7 +11,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat.*
 import androidx.fragment.app.Fragment
+import com.google.firebase.FirebaseApp
+import com.google.firebase.iid.internal.FirebaseInstanceIdInternal
+import com.google.firebase.messaging.FirebaseMessaging
 import com.training.tracking_app.databinding.ActivityMainBinding
+import com.training.tracking_app.helper.HelperApi
 
 
 class MainActivity : AppCompatActivity() {
@@ -19,14 +23,26 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
     private val TAG = "PermissionDemo"
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+            if(it.isComplete){
+                var firebaseToken = it.result.toString()
+                HelperApi.showLog(firebaseToken)
+            }
+        }
+        FirebaseMessaging.getInstance().subscribeToTopic("Track")
 
         setupPermissions()
         init()
     }
+
+
+
 
     private fun setupPermissions() {
         val permission = checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
